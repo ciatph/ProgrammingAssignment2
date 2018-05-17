@@ -1,15 +1,35 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Programming Assignment: Lexical Scoping 
+## For JHU Data Science - R Programming course
+## madbarua 20180517
 
-## Write a short comment describing this function
+## Creates a special "matrix" object that can cache its inverse
+## The matrix supplied is always invertible
+## setinverse: solve and cache the matrix inverse
+## getinverse: get the cached matrix inverse
+## get: get the original matrix
 
-makeCacheMatrix <- function(x = matrix()) {
-
+makeCacheMatrix <- function(m = matrix(c(1,2,3,1), 2, 2)){
+  inv <- NULL
+  get <- function() m
+  setinverse <- function(){
+    inv <<- solve(m)
+  }
+  getinverse <- function() inv
+  list(setinverse = setinverse, 
+       get = get,
+       getinverse = getinverse)
 }
 
 
-## Write a short comment describing this function
+## This function computes the inverse of the special "matrix" returned by makeCacheMatrix above.
+## Attempts to return "cached" inverse matrix if its already pre-computed
+## Computes the inverse matrix if its not yet cached 
 
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+cacheSolve <- function(x, ...){
+  m <- x$getinverse()
+  if(!is.null(m)){
+    message("getting cached data")
+    return(m)
+  }
+  solve(x$get())
 }
